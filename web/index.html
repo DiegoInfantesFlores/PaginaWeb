@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>Iniciar Sesión</div>
+        <input type="text" name="user" id="user" placeholder="usuario">
+        <input type="password" name="pass" id="pass" placeholder="clave">
+        <button onclick="logear();">Login</button>
+        <button onclick="Consulta();">Consulta</button>
+        <div id="rpta"></div>
+        <br><br>
+        <table id="myTable" cellpadding="1" border="1" style="border-collapse:collapse;width:100%"> 
+            <tr>
+                <th>Id</th>
+                <th>Marca</th>
+                <th>Precio</th>
+                <th>Color</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Toyoya</td>
+                <td>25000</td>
+                <td>Blanco</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Nissan</td>
+                <td>30000</td>
+                <td>Gris</td>
+            </tr>
+            
+            <tr>
+                <td>3</td>
+                <td>Tico</td>
+                <td>20000</td>
+                <td>Amarillo</td>
+            </tr>
+            
+            
+        </table>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script type="text/javascript">
+            function Consulta(){
+                $.ajax({
+                    method: 'POST',
+                    url: 'Consulta',
+                    success: function (msg) {
+                        console.log(msg);
+                    },
+                    error: function (msg) {
+                        console.error(msg);
+                    }
+                });
+            }
+         
+            function logear() {
+                var usuario = document.getElementById("user").value;
+                var clave = document.getElementById("pass").value;
+                console.log('Haciendo el login. ' + usuario + ' clave: ' + clave);
+                $.ajax({
+                    method: 'POST',
+                    url: 'LoginServlet',
+                    data: {
+                        usuario: usuario,
+                        clave: clave
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        document.getElementById("rpta").innerHTML = msg.msj;
+                    },
+                    error: function (msg) {
+                        console.error(msg);
+                    }
+                });
+            }
+            
+        </script>  
+    </body>
+</html>
