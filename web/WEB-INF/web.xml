@@ -8,6 +8,18 @@
         <servlet-name>Consulta</servlet-name>
         <servlet-class>Servlets.Consulta</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EliminarServlet</servlet-name>
+        <servlet-class>Servlets.EliminarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ActualizarServlet</servlet-name>
+        <servlet-class>Servlets.ActualizarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InsertarServlet</servlet-name>
+        <servlet-class>Servlets.InsertarServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
@@ -15,6 +27,18 @@
     <servlet-mapping>
         <servlet-name>Consulta</servlet-name>
         <url-pattern>/Consulta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EliminarServlet</servlet-name>
+        <url-pattern>/EliminarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActualizarServlet</servlet-name>
+        <url-pattern>/ActualizarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertarServlet</servlet-name>
+        <url-pattern>/InsertarServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

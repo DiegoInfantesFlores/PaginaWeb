@@ -5,12 +5,14 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-        <div>Iniciar Sesión</div>
-        <input type="text" name="user" id="user" placeholder="usuario">
-        <input type="password" name="pass" id="pass" placeholder="clave">
-        <button onclick="logear();">Login</button>
-        <button onclick="Consulta();">Consulta</button>
+    <body onload="Consulta();">
+        <div>Actualizar Datos</div>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre">
+        <input type="text" id="precio" name="precio" placeholder="Precio">
+        <input type="text" id="color" name="color" placeholder="Color">
+        
+        <button onclick="insertar();">Insertar</button>
+        
         <div id="rpta"></div>
         <br><br>
         <table id="myTable" cellpadding="1" border="1" style="border-collapse:collapse;width:100%"> 
@@ -19,37 +21,148 @@
                 <th>Marca</th>
                 <th>Precio</th>
                 <th>Color</th>
+                <th>Acciones</th>
+                <th>Dolares</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>Toyoya</td>
-                <td>25000</td>
-                <td>Blanco</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Nissan</td>
-                <td>30000</td>
-                <td>Gris</td>
-            </tr>
-            
-            <tr>
-                <td>3</td>
-                <td>Tico</td>
-                <td>20000</td>
-                <td>Amarillo</td>
-            </tr>
-            
+         
             
         </table>
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script type="text/javascript">
+            
+            function insertar() {
+                var nombre = document.getElementById("nombre").value;
+                var precio = document.getElementById("precio").value;
+                var color = document.getElementById("color").value;
+                $.ajax({
+                    method : 'POST',
+                    url    : 'InsertarServlet',
+                    data   : {
+                        nombre : nombre,
+                        precio : precio,
+                        color  : color
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        var tabla = document.getElementById("myTable");
+                        var fila = tabla.insertRow(1);
+                        //CREAR CELDAS
+                        var celda0 = fila.insertCell(0);
+                        var celda1 = fila.insertCell(1);
+                        var celda2 = fila.insertCell(2);
+                        var celda3 = fila.insertCell(3);
+                        var celda4 = fila.insertCell(4);
+                        var celda5 = fila.insertCell(5);
+                        //PONER UN VALOR EN CADA CELDA
+                        celda0.innerHTML = msg.id_prod;
+                        celda1.innerHTML = nombre;
+                        celda2.innerHTML = precio;
+                        celda3.innerHTML = color;
+                        celda4.innerHTML = '<button onclick="borrar(this, '+msg.id_prod+')">Borrar</button>'+
+                            '<button onclick="actualizar('+msg.id_prod+')">Actualizar</button>'
+                            +'<button onclick="ver(this)">Ver</button>';
+                        celda5.innerHTML = dolares;
+                        //alert(msg.mensaje);
+                    },
+                    error: function(msg) {
+                        console.error(msg);
+                    }
+                });
+            }
+            
+            function ver (btn) {
+                var fila = btn.closest('tr');
+                var nombre = fila.cells[1].innerHTML;
+                var precio = fila.cells[2].innerHTML;
+                var color = fila.cells[3].innerHTML;
+                document.getElementById("nombre").value = nombre;
+                document.getElementById("precio").value = precio;
+                document.getElementById("color").value = color;
+                
+            }
+            function actualizar (idvehiculo) {
+                var nombre = document.getElementById("nombre").value;
+                var precio = document.getElementById("precio").value;
+                var color = document.getElementById("color").value;
+                $.ajax({
+                    method : 'POST',
+                    url    : 'ActualizarServlet',
+                    data   : {
+                        id_ve : idvehiculo,
+                        nombre : nombre,
+                        precio : precio,
+                        color : color
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        
+                        alert(msg.mensaje);
+                    },
+                    error: function(msg) {
+                        console.error(msg);
+                    }
+                });
+            }
+      
+            function borrar(btn, idvehiculo){
+                console.log(idvehiculo);
+                var respuesta = prompt('Escribe OK para eliminar');
+                if(respuesta == 'OK'){
+                    var fila = btn.closest('tr');
+                    //Llamar al java
+                    $.ajax({
+                    method: 'POST',
+                    url: 'EliminarServlet',
+                    data: {
+                      id_ve : idvehiculo
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        fila.remove();
+                        alert(msg.mensaje);
+                    },
+                    error: function (msg) {
+                        console.error(msg);
+                    }
+                }); 
+             
+                }
+            }
+ 
+            
             function Consulta(){
                 $.ajax({
                     method: 'POST',
                     url: 'Consulta',
                     success: function (msg) {
-                        console.log(msg);
+                    /*console.log(msg);*/
+                        //console.table(msg);
+                        var tabla = document.getElementById("myTable");
+                        for(var i = 0; i < msg.length; i++){
+                            console.log(msg[i].color);
+                            //CREO UNA FILA
+                            var fila = tabla.insertRow(1);
+                            /*console.log(tabla);*/
+                            //CREAR CELDAS
+                            var celda0=fila.insertCell(0);
+                            var celda1=fila.insertCell(1);
+                            var celda2=fila.insertCell(2);
+                            var celda3=fila.insertCell(3);
+                            var celda4=fila.insertCell(4);
+                            var celda5=fila.insertCell(5);
+                            //poner un valor de cada celda
+                            celda0.innerHTML = msg[i].idvehiculo;
+                            celda1.innerHTML = msg[i].marca;
+                            celda2.innerHTML = msg[i].precio;
+                            celda3.innerHTML = msg[i].color;
+                            celda4.innerHTML = '<button onclick="borrar(this, '+msg[i].idvehiculo+')">Borrar</button>'+
+                            '<button onclick="actualizar('+msg[i].idvehiculo+')">Actualizar</button>'
+                            +'<button onclick="ver(this)">Ver</button>';
+                            celda5.innerHTML = msg[i].dolares;
+                            
+                            
+                        }
                     },
                     error: function (msg) {
                         console.error(msg);

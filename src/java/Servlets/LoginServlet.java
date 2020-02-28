@@ -24,7 +24,7 @@ public class LoginServlet extends HttpServlet {
             String usuario = request.getParameter("usuario");
             String clave = request.getParameter("clave");
             /*System.err.println("Usuario: "+usuario+"Clave: "+clave);*/
-            String msj;
+            String msj;            
             if(usuario.equals("diego") && clave.equals("123")){
                  msj = "Bienvenido "+usuario;
             }else{
